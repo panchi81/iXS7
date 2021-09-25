@@ -1,0 +1,15 @@
+﻿DATA_BLOCK "DB4"
+{ S7_Optimized_Access := 'FALSE' }
+VERSION : 0.1
+   STRUCT 
+      eee : Bool;
+      rrr : DInt;
+      eer : DWord;
+      fdfd : Real;
+   END_STRUCT;
+
+
+BEGIN
+
+END_DATA_BLOCK
+
