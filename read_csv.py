@@ -1,5 +1,6 @@
 #! iXS7env\Scripts\python.exe
 import csv
+from os import read
 from pathlib import Path
 from string import digits
 
@@ -34,6 +35,7 @@ with open(readfile_path, "r") as ix_tag_export, open(writefile_path, "a") as s7_
     header = next(h_reader)
     header[0] = header[0].removeprefix("// ")
     header[-1] = header[-1].removesuffix(" //")
+    # Work with the following reader
     reader = csv.DictReader(ix_tag_export, fieldnames=header, delimiter=delimiter)
     # skip the header
     next(reader)
@@ -47,13 +49,15 @@ with open(readfile_path, "r") as ix_tag_export, open(writefile_path, "a") as s7_
         snippet = row[Address].split(".")[0]
         if snippet.startswith("DB"):
             db.append(snippet)
-    # test this...
-    for x_row in reader:
-        print(x_row)
     # prepare DataBlock dict
     db_dict = {i: [] for i in sorted(set(db))}
-    # DEBUG
-    # print(db_dict)
+    # read from the top
+    ix_tag_export.seek(0)
+    # skip header (again)
+    next(reader)
+    # Debugs
+    for x_row in reader:
+        print(x_row)
 
 
 # ToDo: Parse iX export file,
