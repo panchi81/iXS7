@@ -1,0 +1,25 @@
+﻿DATA_BLOCK "Data_block_10"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+NON_RETAIN
+   VAR 
+      _double : LReal;
+      _float : Real;
+      _uint32 : UDInt;
+      _int32 : DInt;
+      _32bit : DWord;
+      _uint16 : UInt;
+      _int16 : Int;
+      _16bit : Word;
+      _byte : Byte;
+      _bool : Bool;
+      _bit : Bool;
+      _string : String;
+      _test : String;
+   END_VAR
+
+
+BEGIN
+
+END_DATA_BLOCK
+
