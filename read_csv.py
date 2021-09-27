@@ -47,6 +47,7 @@ with open(readfile_path, "r") as ix_tag_export, open(writefile_path, "a") as s7_
         snippet = row[Address].split(".")[0]
         if snippet.startswith("DB"):
             db.append(snippet)
+    # test this...
     for x_row in reader:
         print(x_row)
     # prepare DataBlock dict
