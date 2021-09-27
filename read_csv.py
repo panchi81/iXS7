@@ -12,16 +12,16 @@ writefile_path = Path("Data_Block_export.scl")
 delimiter = ","
 
 data_types = {
-    "DEFAULT": [0, ""],
-    "BIT": [0, "Bool"],
-    "BOOL": [0, "Bool"],
-    "INT16": [0, "Word"],
-    "UINT16": [0, "UInt"],
-    "INT32": [0, "DWord"],
-    "UINT32": [0, "UDInt"],
-    "FLOAT": [0, "Real"],
-    "DOUBLE": [0, "LReal"],
-    "STRING": [0, "String"],
+    "DEFAULT": [0, "", ""],
+    "BIT": [0, "Bool", "DBXx.y"],
+    "BOOL": [0, "Bool", "DBXx.y"],
+    "INT16": [0, "Word", "DBW", "DBB"],
+    "UINT16": [0, "UInt", "DBW"],
+    "INT32": [0, "DWord", "MD"],
+    "UINT32": [0, "UDInt", "MD"],
+    "FLOAT": [0, "Real", "MD"],
+    "DOUBLE": [0, "LReal", ""],
+    "STRING": [0, "String", ""],
 }
 
 db = []
@@ -77,7 +77,7 @@ with open(readfile_path, "r") as ix_tag_export, open(writefile_path, "a") as s7_
     print(f"{db_dict= }")
     print(f"{sorted_tags= }")
 
-# ToDo: Filter out addresses within other addresses (Bit in word/float/long, word in float/long, or float in long)
+# ToDo: Filter out addresses within other addresses (Bit in byte/word/float/double, byte in word/float/double, word in float/double, or float in double)
 # ToDo: Fill-in missing DB entries with expected (missing) datatype and enumerated Tag_name.
 # ToDo: Write output file
 
