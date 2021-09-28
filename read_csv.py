@@ -1,8 +1,10 @@
 #! iXS7env\Scripts\python.exe
+
 import csv
 from os import read
 from pathlib import Path
-from string import digits
+from string import digits, ascii_letters
+import re
 
 # readfile_path = Path("C:/Users/FRAGO/Documents/Support2021/178095 - S7ISOTCP_recipe items missing/Export/export.txt")
 # readfile_path = Path("export.txt")
@@ -11,22 +13,31 @@ readfile_path = Path("test_export.txt")
 writefile_path = Path("Data_Block_export.scl")
 delimiter = ","
 
-data_types = {
-    "DEFAULT": [0, "", ""],
-    "BIT": [0, "Bool", "DBXx.y"],
-    "BOOL": [0, "Bool", "DBXx.y"],
-    "INT16": [0, "Word", "DBW", "DBB"],
-    "UINT16": [0, "UInt", "DBW"],
-    "INT32": [0, "DWord", "MD"],
-    "UINT32": [0, "UDInt", "MD"],
-    "FLOAT": [0, "Real", "MD"],
-    "DOUBLE": [0, "LReal", ""],
-    "STRING": [0, "String", ""],
+# data_types = {
+#     "DEFAULT": ["", "", 0, 0],
+#     "BIT": ["Bool", "DBXx.y", 1, 0],
+#     "BOOL": ["Bool", "DBXx.y", 1, 0],
+#     "INT16": ["Word", "DBW", "DBB", 2, 0],
+#     "UINT16": ["UInt", "DBW", 2, 0],
+#     "INT32": ["DWord", "MD", 4, 0],
+#     "UINT32": ["UDInt", "MD", 4, 0],
+#     "FLOAT": ["Real", "MD", 4, 0],
+#     "DOUBLE": ["LReal", "M", 8, 0],
+#     "STRING": ["String", "", 0, 0],
+# }
+
+byte_address: int = 0
+bit_address: int = 0
+
+db_datatypes = {
+    f"M{byte_address}.{bit_address}": "LReal",
+    "DBD": "Real",
+    "DBW": "Word",
+    "DBB": "Byte",
+    "DBX": "Bool",
 }
 
 db = []
-# DEBUG
-# print("Testing")
 
 with open(readfile_path, "r") as ix_tag_export, open(writefile_path, "a") as s7_db_scl:
     # initiate cleaning of header
@@ -54,10 +65,7 @@ with open(readfile_path, "r") as ix_tag_export, open(writefile_path, "a") as s7_
         if data_block.startswith("DB"):
             db.append(data_block)
 
-    # prepare DataBlock dict
-    # Sorted by DB
-    # db_dict = {i: [] for i in sorted(set(db))}
-    # unsorted dictionary
+    # prepare unique-DataBlock dict (unsorted)
     db_dict = {i: [] for i in set(db)}
 
     # read from the top
@@ -73,11 +81,34 @@ with open(readfile_path, "r") as ix_tag_export, open(writefile_path, "a") as s7_
     sorted_tags = {
         i: sorted(db_dict[i], key=lambda x: int(x.split(".")[1][3:])) for i in db_dict
     }
-    # Debug
-    print(f"{db_dict= }")
-    print(f"{sorted_tags= }")
+# Debug
+print(f"{sorted_tags= }")
 
+# db_datatypes = {
+#     f"M{byte_address}.{bit_address}": "LReal",
+#     "DBD": "Real",
+#     "DBW": "Word",
+#     "DBB": "Byte",
+#     "DBX": "Bool",
+# }
 # ToDo: Filter out addresses within other addresses (Bit in byte/word/float/double, byte in word/float/double, word in float/double, or float in double)
+# If DBX_ in DBB_ in DBW_+1 in DBD_+3 in M_+7
+# Cleanup Subsets of used bytes:
+bytes = [
+    int(j.split(".")[1].lstrip(ascii_letters)) for i in sorted_tags.values() for j in i
+]
+print(bytes)
+
+# for i in sorted_tags.values():
+#     for j in i:
+# print(j.split(".")[1])
+# print(int(j.split(".")[1].lstrip(ascii_letters)))
+# byte = re.match(r"([a-zA-Z]+)([0-9]+)", j.split(".")[1])  # , re.I
+# if byte:
+#     items = byte.groups()
+# print(items)
+
+
 # ToDo: Fill-in missing DB entries with expected (missing) datatype and enumerated Tag_name.
 # ToDo: Write output file
 
@@ -110,7 +141,7 @@ with open(readfile_path, "r") as ix_tag_export, open(writefile_path, "a") as s7_
 # }
 # # print(sorted_tags)
 
-# s7_datatypes = {"DBD": "Real", "DBW": "Word", "DBX": "Bool"}
+# s7_db_datatypes = {"DBD": "Real", "DBW": "Word", "DBB": "Byte", "DBX": "Bool"}
 
 # part1 = """{ S7_Optimized_Access := 'FALSE' }
 # VERSION : 0.1
@@ -133,7 +164,7 @@ with open(readfile_path, "r") as ix_tag_export, open(writefile_path, "a") as s7_
 #         for val in values:
 
 #             f_out.write(
-#                 f"      {val.replace('.', '_')} : {s7_datatypes[val.split('.')[1].rstrip(digits)]};\n"
+#                 f"      {val.replace('.', '_')} : {s7_db_datatypes[val.split('.')[1].rstrip(digits)]};\n"
 #             )
 #         f_out.write(part2)
 
