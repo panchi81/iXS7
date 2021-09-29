@@ -96,7 +96,22 @@ print(f"{sorted_tags= }")
 bytes = [
     int(j.split(".")[1].lstrip(ascii_letters)) for i in sorted_tags.values() for j in i
 ]
-print(bytes)
+
+# Debug
+# print(bytes)
+
+for datablock, address_list in sorted_tags.items():
+    for address in address_list:
+        # Debug
+        # print(address)
+        db_datatype = address.split(".")[1].rstrip(digits)
+        db_byte = int(address.split(".")[1].lstrip(ascii_letters))
+        # Debug
+        print(f"{db_datatype}\t{db_byte}")
+
+        if int(address.split(".")[1].lstrip(ascii_letters)) != 0:
+            result = sorted_tags[data_block][address] + 1
+            # sorted_tags['DB10'][0]
 
 
 # ToDo: Fill-in missing DB entries with expected (missing) datatype and enumerated Tag_name.
