@@ -4,7 +4,6 @@ import csv
 from os import read
 from pathlib import Path
 from string import digits, ascii_letters
-import re
 
 # readfile_path = Path("C:/Users/FRAGO/Documents/Support2021/178095 - S7ISOTCP_recipe items missing/Export/export.txt")
 # readfile_path = Path("export.txt")
@@ -98,15 +97,6 @@ bytes = [
     int(j.split(".")[1].lstrip(ascii_letters)) for i in sorted_tags.values() for j in i
 ]
 print(bytes)
-
-# for i in sorted_tags.values():
-#     for j in i:
-# print(j.split(".")[1])
-# print(int(j.split(".")[1].lstrip(ascii_letters)))
-# byte = re.match(r"([a-zA-Z]+)([0-9]+)", j.split(".")[1])  # , re.I
-# if byte:
-#     items = byte.groups()
-# print(items)
 
 
 # ToDo: Fill-in missing DB entries with expected (missing) datatype and enumerated Tag_name.
