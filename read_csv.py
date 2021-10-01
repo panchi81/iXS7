@@ -1,5 +1,6 @@
 #! iXS7env\Scripts\python.exe
 
+from abc import ABC
 import csv
 from os import read
 from pathlib import Path
@@ -8,7 +9,8 @@ from string import digits, ascii_letters
 # readfile_path = Path("C:/Users/FRAGO/Documents/Support2021/178095 - S7ISOTCP_recipe items missing/Export/export.txt")
 # readfile_path = Path("export.txt")
 # readfile_path = Path("removed_tags.txt")
-readfile_path = Path("test_export.txt")
+# readfile_path = Path("test_export.txt")
+readfile_path = Path("unsorted_tag_export.csv")
 writefile_path = Path("Data_Block_export.scl")
 delimiter = ","
 
@@ -81,7 +83,14 @@ with open(readfile_path, "r") as ix_tag_export, open(writefile_path, "a") as s7_
         i: sorted(db_dict[i], key=lambda x: int(x.split(".")[1][3:])) for i in db_dict
     }
 # Debug
-print(f"{sorted_tags= }")
+# print(f"{sorted_tags= }")
+
+# ToDo: Filter out addresses within other addresses (Bit in byte/word/float/double, byte in word/float/double, word in float/double, or float in double)
+# If DBX_ in DBB_ in DBW_+1 in DBD_+3 in M_+7
+# Cleanup Subsets of used bytes:
+# bytes = [
+#     int(j.split(".")[1].lstrip(ascii_letters)) for i in sorted_tags.values() for j in i
+# ]
 
 # db_datatypes = {
 #     f"M{byte_address}.{bit_address}": "LReal",
@@ -90,28 +99,51 @@ print(f"{sorted_tags= }")
 #     "DBB": "Byte",
 #     "DBX": "Bool",
 # }
-# ToDo: Filter out addresses within other addresses (Bit in byte/word/float/double, byte in word/float/double, word in float/double, or float in double)
-# If DBX_ in DBB_ in DBW_+1 in DBD_+3 in M_+7
-# Cleanup Subsets of used bytes:
-bytes = [
-    int(j.split(".")[1].lstrip(ascii_letters)) for i in sorted_tags.values() for j in i
-]
 
-# Debug
-# print(bytes)
+siemens_s7_DB_datatypes = {
+    "Double": {"designation": f"M{byte_address}", "syntax": "LReal", "bytes": 8},
+    "Float": {"designation": f"DBD{byte_address}", "syntax": "Real", "bytes": 4},
+    "INT16_W": {"designation": f"DBW{byte_address}", "syntax": "Word", "bytes": 2},
+    "INT16_B": {"designation": f"DBB{byte_address}", "syntax": "Byte", "bytes": 1},
+    "BIT": {"designation": f"DBX{byte_address}", "syntax": "Bool", "bytes": 0},
+}
+
+
+def byte_padding(iX_tags: dict) -> dict:
+    """Check for address consistency from start to end within the included DataBlocks.
+    Insert missing Addresses.
+
+    Args:
+        tags (dict): Datablocks and their contents
+
+    Returns:
+        dict: Datablocks with no missing entries.
+    """
+    for datablock, address_list in iX_tags.items():
+        # Check if first item in DB starts at address 0.0
+        if int(iX_tags[data_block][0].split(".")[1].lstrip(ascii_letters)) != 0:
+            byte_padding = int(
+                sorted_tags[data_block][1].split[1].lstrip(ascii_letters)
+            )
+
 
 for datablock, address_list in sorted_tags.items():
+    # # Check if first item in DB starts at address 0.0 # This is now checked in byte_padding()
+    # if int(sorted_tags[data_block][0].split(".")[1].lstrip(ascii_letters)) != 0:
+    #     byte_padding = int(sorted_tags[data_block][1].split[1].lstrip(ascii_letters))
+
     for address in address_list:
         # Debug
         # print(address)
         db_datatype = address.split(".")[1].rstrip(digits)
         db_byte = int(address.split(".")[1].lstrip(ascii_letters))
         # Debug
-        print(f"{db_datatype}\t{db_byte}")
+        # print(f"{db_datatype}\t{db_byte}")
 
-        if int(address.split(".")[1].lstrip(ascii_letters)) != 0:
-            result = sorted_tags[data_block][address] + 1
-            # sorted_tags['DB10'][0]
+        # if int(address.split(".")[1].lstrip(ascii_letters)) != 0:
+        # if db_byte != 0:
+        # result = sorted_tags[data_block][address] + 1 # TypeError: list indices must be integers or slices, not str
+        # sorted_tags['DB10'][0]
 
 
 # ToDo: Fill-in missing DB entries with expected (missing) datatype and enumerated Tag_name.
