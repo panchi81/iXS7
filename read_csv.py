@@ -83,7 +83,7 @@ with open(readfile_path, "r") as ix_tag_export, open(writefile_path, "a") as s7_
         i: sorted(db_dict[i], key=lambda x: int(x.split(".")[1][3:])) for i in db_dict
     }
 # Debug
-# print(f"{sorted_tags= }")
+print(f"{sorted_tags= }")
 
 # ToDo: Filter out addresses within other addresses (Bit in byte/word/float/double, byte in word/float/double, word in float/double, or float in double)
 # If DBX_ in DBB_ in DBW_+1 in DBD_+3 in M_+7
