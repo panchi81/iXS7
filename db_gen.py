@@ -18,8 +18,8 @@ BEGIN
 END_DATA_BLOCK
 """
 
-with open(siemens_file, "w") as fout:
-    fout.write(text_header)
+with open(siemens_file, "w") as f_out:
+    f_out.write(text_header)
     for x in range(400):
-        fout.write(f"      S7Tag{x} : Word;\n")
-    fout.write(text_tail)
+        f_out.write(f"      S7Tag{x} : Word;\n")
+    f_out.write(text_tail)
