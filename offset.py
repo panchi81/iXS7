@@ -12,9 +12,9 @@ sorted_tags = {
     ],
 }
 
-gaps = [i for _, addresses in sorted_tags.items() for i in addresses]
+entries = [i for _, addresses in sorted_tags.items() for i in addresses]
 
-gaps = [
+entries = [
     "DB101.DBW2",
     "DB101.DBD4",
     "DB101.DBD12",
@@ -27,6 +27,8 @@ gaps = [
     "DB104.DBD16",
     "DB104.DBD20",
 ]
+
+missing = []
 
 siemens_s7_DB_datatypes = {
     "DBD": {"type": "Float", "syntax": "Real", "offset": 4},
