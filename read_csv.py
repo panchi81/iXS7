@@ -10,8 +10,10 @@ from string import digits, ascii_letters
 # readfile_path = Path("export.txt")
 # readfile_path = Path("removed_tags.txt")
 # readfile_path = Path("test_export.txt")
-readfile_path = Path("unsorted_tag_export.csv")
-writefile_path = Path("Data_Block_export.scl")
+# readfile_path = Path("unsorted_tag_export.csv")
+# writefile_path = Path("Data_Block_export.scl")
+readfile_path = Path("iX_export_s7_1200.txt")
+writefile_path = Path("S7_1200.scl")
 delimiter = ","
 
 # data_types = {

@@ -1,0 +1,5 @@
+// Name,DataType,Address_1 //
+Tag1,INT16,D0
+Tag2,INT16,D1
+Tag3,INT16,D2
+Tag4,INT16,D3

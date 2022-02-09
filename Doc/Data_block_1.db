@@ -1,0 +1,20 @@
+﻿DATA_BLOCK "Data_block_1"
+{ S7_Optimized_Access := 'FALSE' }
+VERSION : 0.1
+NON_RETAIN
+   STRUCT 
+      _float : Real;
+      _int32 : DInt;
+      _uint32_i : UDInt;
+      _uint32_w : DWord;
+      _int16 : Int;
+      _uint16_i : UInt;
+      _uint16_w : Word;
+      _bit : Bool;
+   END_STRUCT;
+
+
+BEGIN
+
+END_DATA_BLOCK
+

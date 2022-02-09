@@ -1,0 +1,41 @@
+DATA_BLOCK "DB10"
+{ S7_Optimized_Access := 'FALSE' }
+VERSION : 0.1
+NON_RETAIN
+    VAR
+        RCP_VD_0 : Real;
+        RCP_VD_4 : Real;
+        RCP_VD_8 : Real;
+        RCP_VD_12 : Real;
+        RCP_VW_16 : Word;
+        RCP_VW_18 : Word;
+        RCP_VW_20 : Word;
+        RCP_VW_22 : Word;
+        RCP_VB_24 : Byte;
+        RCP_VB_25 : Byte;
+        RCP_VB_26 : Byte;
+        RCP_VB_27 : Byte;
+        RCP_VB_28 : Byte;
+        RCP_VB_29 : Byte;
+        RCP_V_30_0 : Bool;
+        RCP_V_30_1 : Bool;
+        RCP_V_30_2 : Bool;
+        RCP_V_30_3 : Bool;
+        RCP_V_30_4 : Bool;
+        RCP_V_30_5 : Bool;
+        RCP_V_30_6 : Bool;
+        RCP_V_30_7 : Bool;
+        RCP_V_31_0 : Bool;
+        RCP_V_31_1 : Bool;
+        RCP_V_31_2 : Bool;
+        RCP_V_31_3 : Bool;
+        RCP_V_31_4 : Bool;
+        RCP_V_31_5 : Bool;
+        RCP_V_31_6 : Bool;
+        RCP_V_31_7 : Bool;
+    END_VAR
+
+
+BEGIN
+    
+END_DATA_BLOCK
