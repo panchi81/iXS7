@@ -1,0 +1,60 @@
+DATA_BLOCK "DB10"
+{ S7_Optimized_Access := 'FALSE' }
+VERSION : 0.1
+NON_RETAIN
+    VAR
+        DB10_PADDING0 : Real;
+        RCP_VD_4 : Real;
+        RCP_VD_8 : Real;
+        RCP_VD_12 : Real;
+        RCP_VW_16 : Word;
+        DB10_PADDING1 : Byte;
+        DB10_PADDING2 : Byte;
+        DB10_PADDING3 : Byte;
+        DB10_PADDING4 : Byte;
+        DB10_PADDING5 : Byte;
+        DB10_PADDING6 : Byte;
+        DB10_PADDING7 : Byte;
+        DB10_PADDING8 : Byte;
+        DB10_PADDING9 : Byte;
+        RCP_VB_26 : Byte;
+        RCP_VB_27 : Byte;
+        DB10_PADDING10 : Byte;
+        DB10_PADDING11 : Byte;
+        RCP_V_30_0 : Bool;
+    END_VAR
+
+
+BEGIN
+    
+END_DATA_BLOCK
+
+DATA_BLOCK "DB4"
+{ S7_Optimized_Access := 'FALSE' }
+VERSION : 0.1
+NON_RETAIN
+    VAR
+        DB4_PADDING0 : Byte
+        DB4_PADDING1 : Byte
+        DB4_PADDING2 : Byte
+        DB4_PADDING3 : Byte
+        DB4_PADDING4 : Byte
+        DB4_PADDING5 : Byte
+        DB4_PADDING6 : Byte
+        DB4_PADDING7 : Byte
+        Tag1 : Word;
+        DB4_PADDING8 : Byte
+        DB4_PADDING9 : Byte
+        Tag2 : Real;
+        DB4_PADDING10 : Byte
+        DB4_PADDING11 : Byte
+        DB4_PADDING12 : Byte
+        DB4_PADDING13 : Byte
+        Tag3 : Word;
+    END_VAR
+
+
+BEGIN
+
+END_DATA_BLOCK
+
