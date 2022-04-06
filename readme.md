@@ -2,9 +2,13 @@
 
 ```mermaid
 flowchart TD
-    DB(DataBlock) --> CheckDB[Generate list of missing entries in DB starting from 0]
+    export(Export iX Tag List) --> read[Open and read the input file]
 
-    CheckDB --> Calc[Calculate offset of missing entries]
+    read --> parse[Parse the input file, sort by Tag address in corresponding Data block]
+
+    parse --> CheckDBs[ For each Data block, Generate list of missing entries in DB starting from 0]
+
+    CheckDBs --> Calc[Calculate offset of missing entries]
 
     Calc --> Insert[Insert corresponding Datatype]
 

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Windows;
+using System.Text.RegularExpressions;
 
 namespace iXS7
 {
@@ -75,6 +76,7 @@ namespace iXS7
                 // String array of lines from input file
                 string[] lines = File.ReadAllLines(iPath);
 
+                //List<string> DB_addresses = InputDataTest(lines);
                 InputDataTest(lines);
             }
 
@@ -93,21 +95,21 @@ namespace iXS7
             Console.ReadKey();
         }
 
-        //static void InputDataTest(string[] iXExportFileContent)
-        //{
-        //    List<iXExport> content = iXExportFileContent
-        //        .Skip(1)
-        //        .Select(v => iXExport.FromExportFile(v))
-        //        .ToList();
+        static void InputDataTest(string[] iXExportFileContent)
+        {
+            List<iXExport> content = iXExportFileContent
+                .Skip(1)
+                .Select(line => new iXExport(line))
+                .ToList();
 
-        //    // Debug
-        //    foreach (iXExport x in content)
-        //    {
-        //        Console.WriteLine(x.Name
-        //            + "\t"
-        //            + x.Address);
-        //    }
-        //}
+            // Debug
+            foreach (iXExport x in content)
+            {
+                Console.WriteLine(x.S7DataType
+                    + "\t"
+                    + x.ByteAddress);
+            }
+        }
 
         static void InputData(IEnumerable<string> strs)
         {
@@ -116,7 +118,7 @@ namespace iXS7
                 //
                 from line in strs
 
-                // Split each row into array of strings
+                    // Split each row into array of strings
                 let exportData = line.Split(',')
 
                 // Skip Header
@@ -130,7 +132,7 @@ namespace iXS7
                 //
                 from line in strs
 
-                // Split each row into array of strings
+                    // Split each row into array of strings
                 let exportData = line.Split(',')
 
                 // Skip Header
@@ -151,48 +153,44 @@ namespace iXS7
                 Console.WriteLine(name[i] + "\t" + address[i]);
             }
         }
-        
-        static void InputDataTest(string[] strs)
+
+        static List<string> InputDataTest2(string[] strs)
         {
-            //    List<iXExport> content = iXExportFileContent
-            //        .Skip(1)
-            //        .Select(v => iXExport.FromExportFile(v))
-            //        .ToList();            
+            //IEnumerable<string> tagName =
 
-            IEnumerable<string> tagName =
+            //    // Skip Header
+            //    from line in strs.Skip(1)
 
-                //Skip Header
-                from line in strs.Skip(1)
+            //    // Split each row into array of strings
+            //    let exportData = line.Split(',')
 
-                // Split each row into array of strings
-                let exportData = line.Split(',')
+            //    // Select the tag name column
+            //    select exportData[0];
 
-                // Select the tag name column
-                select exportData[0];
+            //// Convert query result to list
+            //var name = tagName.ToList();
 
             IEnumerable<string> tagAddressList =
-                
-                //
-                from line in strs.Skip(1)
-
-                //Split each row into array of strings
-                let exportData = line.Split(',')
 
                 // Skip Header
-                //let dbData = exportData.Skip(1)
+                from line in strs.Skip(1)
+
+                    // Split each row into array of strings
+                let exportData = line.Split(',')
 
                 // select the tag address column
                 select exportData[2];
 
             //var results = query.ToList();
-            var name = tagName.ToList();
-            var address = tagAddressList.ToList();
+            //var address = tagAddressList.ToList();
 
-            // Debug
-            for (int i = 0; i < tagAddressList.Count(); i++)
-            {
-                Console.WriteLine(name[i] + "\t" + address[i]);
-            }
+            return tagAddressList.ToList();
+
+            //// Debug
+            //for (int i = 0; i < tagAddressList.Count(); i++)
+            //{
+            //    Console.WriteLine(name[i] + "\t" + address[i]);
+            //}
         }
 
         private static void OutputFile(string foutPath)
@@ -214,18 +212,40 @@ namespace iXS7
     }
     class iXExport
     {
-        string Name;
-        string DataType;
-        string Address;
+        public string Name { get; private set; }
+        public string FullAddress { get; private set; }
+        public string DB { get; private set; }
+        public string iXDataType { get; private set; }
+        public string S7DataType { get; private set; }
+        public int ByteAddress { get; private set; }
+        public int BitAddress { get; private set; }
 
-        public static iXExport FromExportFile(string exportLine)
+        public iXExport(string exportLine)
         {
+            // Split each string, delimiter = ','
             string[] entries = exportLine.Split(',');
-            iXExport ixexport = new iXExport();
-            ixexport.Name = entries[0];
-            ixexport.DataType = entries[1];
-            ixexport.Address = entries[2];
-            return ixexport;
+
+            // Assign superficial properties
+            Name = entries[0];
+            FullAddress = entries[2];
+            iXDataType = entries[1];
+
+            // String manipulation to extract the profound properties
+            string[] temp = FullAddress.Split('.');
+            DB = temp[0].ToString();
+
+            S7DataType = Regex.Replace(temp[1].ToString(), @"[0-9$]", ""); // Filter out the numeric address value
+            ByteAddress = Convert.ToInt32(Regex.Replace(temp[1], @"[a-zA-Z]", "")); // Filter out the alphanumerical chars
+            //ByteAddress = Regex.Replace(temp[1], @"[a-zA-Z]", ""); // Filter out the alphanumerical chars
+
+            if (temp.Length > 2)
+            {
+                BitAddress = Convert.ToInt32(temp[2]); // might not exist, check first
+            }
+            else
+            {
+                BitAddress = 0;
+            }
         }
-    }    
+    }
 }
