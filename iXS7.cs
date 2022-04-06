@@ -116,7 +116,7 @@ namespace iXS7
                 //
                 from line in strs
 
-                    // Split each row into array of strings
+                // Split each row into array of strings
                 let exportData = line.Split(',')
 
                 // Skip Header
@@ -130,7 +130,7 @@ namespace iXS7
                 //
                 from line in strs
 
-                    // Split each row into array of strings
+                // Split each row into array of strings
                 let exportData = line.Split(',')
 
                 // Skip Header
@@ -151,34 +151,31 @@ namespace iXS7
                 Console.WriteLine(name[i] + "\t" + address[i]);
             }
         }
-
+        
         static void InputDataTest(string[] strs)
         {
             //    List<iXExport> content = iXExportFileContent
             //        .Skip(1)
             //        .Select(v => iXExport.FromExportFile(v))
-            //        .ToList();
+            //        .ToList();            
 
             IEnumerable<string> tagName =
 
-                //
-                from line in strs
+                //Skip Header
+                from line in strs.Skip(1)
 
-                    // Split each row into array of strings
+                // Split each row into array of strings
                 let exportData = line.Split(',')
-
-                // Skip Header
-                //let dbData = exportData.Skip(1)
 
                 // Select the tag name column
                 select exportData[0];
 
             IEnumerable<string> tagAddressList =
-
+                
                 //
-                from line in strs
+                from line in strs.Skip(1)
 
-                    // Split each row into array of strings
+                //Split each row into array of strings
                 let exportData = line.Split(',')
 
                 // Skip Header
@@ -188,14 +185,11 @@ namespace iXS7
                 select exportData[2];
 
             //var results = query.ToList();
-            var name = tagName.Skip(1).ToList();
-            var address = tagAddressList.Skip(1).ToList();
-
-            // Dictionary<string, string> dataBlocks;
+            var name = tagName.ToList();
+            var address = tagAddressList.ToList();
 
             // Debug
-            //for (int i = 0; i < tagAddressList.Count() -1; i++)
-            for (int i = 0; i < address.Count(); i++)
+            for (int i = 0; i < tagAddressList.Count(); i++)
             {
                 Console.WriteLine(name[i] + "\t" + address[i]);
             }
@@ -233,5 +227,5 @@ namespace iXS7
             ixexport.Address = entries[2];
             return ixexport;
         }
-    }
+    }    
 }
