@@ -97,17 +97,28 @@ namespace iXS7
 
         static void InputDataTest(string[] iXExportFileContent)
         {
+            // Locate header
+            foreach (string line in iXExportFileContent)
+            {
+                if (line.StartsWith("// "))
+                {
+                    string tempHeader = line.Trim(new char[] { ' ', '/' });
+                    string[] columns = tempHeader.Split(',');
+                    break;
+                }
+            }
+
             List<iXExport> content = iXExportFileContent
                 .Skip(1)
                 .Select(line => new iXExport(line))
                 .ToList();
 
             // Debug
-            foreach (iXExport x in content)
+            foreach (iXExport tag in content)
             {
-                Console.WriteLine(x.S7DataType
+                Console.WriteLine(tag.S7DataType
                     + "\t"
-                    + x.ByteAddress);
+                    + tag.ByteAddress);
             }
         }
 
@@ -220,11 +231,13 @@ namespace iXS7
         public int ByteAddress { get; private set; }
         public int BitAddress { get; private set; }
 
-        public iXExport(string exportLine)
+        // pass in the order of the columns, instead of the headers...
+        public iXExport(string[] headers, string exportLine)
         {
             // Split each string, delimiter = ','
             string[] entries = exportLine.Split(',');
 
+            // Change this!!!!
             // Assign superficial properties
             Name = entries[0];
             FullAddress = entries[2];
@@ -247,5 +260,29 @@ namespace iXS7
                 BitAddress = 0;
             }
         }
+        public void getHeaderVals(string[] headers)
+        {
+            // identify headers
+            Dictionary<string, int> idx = new Dictionary<string, int>();
+
+            for (int i = 0; i < headers.Count(); i++)
+            {
+                switch (headers[i])
+                {
+                    case string entry when entry.StartsWith("Name"):
+                        idx.Add("Name", i);
+                        break;
+
+                    case string entry when entry.StartsWith("DataType"):
+                        idx.Add("iXDataType", i);
+                        break;
+
+                    case string entry when entry.StartsWith("Address_"):
+                        idx.Add("FullAddress", i);
+                        break;
+                }
+            }
+        }
+
     }
 }
