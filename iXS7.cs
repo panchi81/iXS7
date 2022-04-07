@@ -110,7 +110,7 @@ namespace iXS7
 
             List<iXExport> content = iXExportFileContent
                 .Skip(1)
-                .Select(line => new iXExport(line))
+                .Select(line => new iXExport(columns, line))
                 .ToList();
 
             // Debug
@@ -232,24 +232,38 @@ namespace iXS7
         public int BitAddress { get; private set; }
 
         // pass in the order of the columns, instead of the headers...
-        public iXExport(string[] headers, string exportLine)
+        public iXExport(Dictionary<string, int> columns, string exportLine)
         {
             // Split each string, delimiter = ','
-            string[] entries = exportLine.Split(',');
+            string[] col = exportLine.Split(',');
+
+            string value = "";
+            if (columns.TryGetValue("Name", out value))
+            {
+                Name = col[columns["Name"]];
+            }
+
+            if (columns.TryGetValue("iXDataType", out value))
+            {
+                iXDataType = col[columns["iXDataType"]];
+            }
+
+            if (columns.TryGetValue("FullAddress", out value))
+            {
+                FullAddress = col[columns["FullAddress"]];
+            }
 
             // Change this!!!!
             // Assign superficial properties
-            Name = entries[0];
-            FullAddress = entries[2];
-            iXDataType = entries[1];
+            FullAddress = col[2];
+            iXDataType = col[1];
 
-            // String manipulation to extract the profound properties
+            // String manipulation to extract the "profound" properties
             string[] temp = FullAddress.Split('.');
             DB = temp[0].ToString();
 
             S7DataType = Regex.Replace(temp[1].ToString(), @"[0-9$]", ""); // Filter out the numeric address value
             ByteAddress = Convert.ToInt32(Regex.Replace(temp[1], @"[a-zA-Z]", "")); // Filter out the alphanumerical chars
-            //ByteAddress = Regex.Replace(temp[1], @"[a-zA-Z]", ""); // Filter out the alphanumerical chars
 
             if (temp.Length > 2)
             {
@@ -283,6 +297,5 @@ namespace iXS7
                 }
             }
         }
-
     }
 }
